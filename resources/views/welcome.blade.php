@@ -19,32 +19,10 @@
 
 
             <div class="content">
+                <h2 class="text-center">Files list</h2>
                 <div class="container">
-                    <h2 class="text-center">Files list</h2>
-                       <div class="row">
+                       <div class="row" id="files">
 
-                           <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">mime_type</th>
-                        <th scope="col">url</th>
-                        <th scope="col">path</th>
-                        <th scope ="col">action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($files as $file)
-                    <tr>
-                      <td>{{$file->id}}</td>
-                      <td>{{$file->mime_type}}</td>
-                      <td>{{$file->url}}</td>
-                      <td>{{$file->path}}</td>
-                      <td><a href="destroy/{{$file->id}}" class="btn btn-danger">delete</a></td>
-                    </tr>
-                    @endforeach
-                    </tbody>
-                </table>
                        </div>
                 </div>
             </div>
@@ -53,5 +31,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
     </body>
 </html>
