@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'FileController@index');
+Route::get('/destroy/{id}', 'FileController@destroy');
+
