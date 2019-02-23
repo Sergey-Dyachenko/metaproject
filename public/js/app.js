@@ -61213,19 +61213,53 @@ function (_Component) {
       });
     }
   }, {
+    key: "pasteData",
+    value: function pasteData(e) {
+      var _this2 = this;
+
+      var url_text = e.clipboardData.getData('Text');
+      console.log(url_text);
+      var params = {
+        url: url_text
+      };
+      axios.post('api/files', params).then(function (response) {
+        console.log(response.data);
+        axios.get('/api/files').then(function (res) {
+          var files = res.data;
+
+          _this2.setState({
+            data: files
+          });
+
+          console.log(_this2.state.files);
+        });
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        method: "post",
+        action: "/savefile",
+        encType: "multipart/form-data"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
+        name: "url",
         className: "form-control",
         id: "exampleInputEmail1",
+        onPaste: this.pasteData.bind(this),
         "aria-describedby": "emailHelp",
         placeholder: "Input url for download and save file"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "submit",
+        className: "btn btn-info"
+      }, "Submit"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
         scope: "col"
@@ -61245,7 +61279,7 @@ function (_Component) {
         }, file.path)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
           href: "javascript:;",
           className: "btn btn-danger",
-          onClick: _this2.deleteFile.bind(_this2, file)
+          onClick: _this3.deleteFile.bind(_this3, file)
         }, "delete")));
       }))));
     }

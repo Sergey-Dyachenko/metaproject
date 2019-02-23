@@ -14,4 +14,5 @@
 Route::get('/', 'FileController@index');
 Route::get('/destroy/{id}', 'FileController@destroy');
 Route::get('/download/{id}', 'FileController@download');
+Route::post('/savefile', 'FileController@savefile');
 

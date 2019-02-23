@@ -31,15 +31,39 @@ export default class Files extends Component {
         this.setState({
             data: newState
         })
+
+    }
+
+    pasteData(e) {
+       let url_text = e.clipboardData.getData('Text');
+       console.log(url_text);
+        const params = {
+            url: url_text,
+        }
+       axios.post('api/files', params).then(response => {
+           console.log(response.data);
+           axios.get('/api/files')
+               .then(res => {
+                   const files = res.data;
+                   this.setState({data : files });
+                   console.log(this.state.files);
+               })
+        }).catch(error => {
+            console.log(error);
+        })
+
+
+
     }
 
     render() {
         return (
             <div>
                 <div className="form-group">
-
-                    <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Input url for download and save file" />
-
+                    <form method="post" action="/savefile" encType="multipart/form-data">
+                        <input type="text" name="url" className="form-control" id="exampleInputEmail1" onPaste={this.pasteData.bind(this)} aria-describedby="emailHelp" placeholder="Input url for download and save file" />
+                        <button type="submit" className="btn btn-info" >Submit</button>
+                    </form>
                 </div>
                 <table className="table">
                 <thead>
