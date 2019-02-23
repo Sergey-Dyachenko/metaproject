@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 use App\File;
+use Response;
 
 class FileController
 {
@@ -22,5 +23,22 @@ class FileController
         $file = File::find($id);
         $file->delete();
         return redirect('/');
+    }
+
+    public function download($id)
+    {
+        $file = File::find($id);
+        $full_url = public_path(). $file->path;
+        $headers = [
+            'Content-Type:' . $file->mime_type
+        ];
+        return response()->download($full_url, 'bootstrap.css', $headers);
+    }
+
+
+    public function savefile($url)
+    {
+        var_dump($url);
+        die();
     }
 }

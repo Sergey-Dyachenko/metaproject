@@ -20,4 +20,12 @@ class ApiController extends Controller
         $files = File::all();
         return response()->json($files);
     }
+
+    public  function destroy($id)
+    {
+        $file = File::find($id);
+        $file->delete();
+
+        return response()->json('File deleted');
+    }
 }

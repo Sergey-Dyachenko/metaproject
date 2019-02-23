@@ -61178,16 +61178,55 @@ function (_Component) {
   _inherits(Files, _Component);
 
   function Files() {
+    var _this;
+
     _classCallCheck(this, Files);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Files).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Files).call(this));
+    _this.state = {
+      data: []
+    };
+    return _this;
   }
 
   _createClass(Files, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      var $this = this;
+      axios.get('/api/files').then(function (response) {
+        $this.setState({
+          data: response.data
+        });
+      });
+    }
+  }, {
+    key: "deleteFile",
+    value: function deleteFile(file) {
+      console.log(file);
+      axios.delete('api/files/' + file.id).then(function (response) {}).catch(function (error) {
+        console.log(error);
+      });
+      var newState = this.state.data.slice();
+      newState.splice(newState.indexOf(file), 1);
+      this.setState({
+        data: newState
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
-        class: "table"
+      var _this2 = this;
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "form-control",
+        id: "exampleInputEmail1",
+        "aria-describedby": "emailHelp",
+        placeholder: "Input url for download and save file"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+        className: "table"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
         scope: "col"
       }, "id"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
@@ -61198,10 +61237,17 @@ function (_Component) {
         scope: "col"
       }, "path"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
         scope: "col"
-      }, "action"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "1"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "type/js"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "http://google.com"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "/storage/"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#",
-        className: "btn btn-danger"
-      }, "delete")))));
+      }, "action"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.state.data.map(function (file, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+          key: i
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, file.id), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, file.mime_type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, file.url), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          href: '/download/' + file.id
+        }, file.path)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          href: "javascript:;",
+          className: "btn btn-danger",
+          onClick: _this2.deleteFile.bind(_this2, file)
+        }, "delete")));
+      }))));
     }
   }]);
 
