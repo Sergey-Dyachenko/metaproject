@@ -40,7 +40,7 @@ class ApiController extends Controller
         }
         else
         {
-            return response()->json($check_result);
+            abort('404', " Request resource not found");
         }
     }
 

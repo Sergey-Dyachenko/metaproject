@@ -61184,12 +61184,45 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Files).call(this));
     _this.state = {
-      data: []
+      data: [],
+      showMessageErrorAddFile: false,
+      showSuccessAddMessageFile: false,
+      showSuccessMessageDelete: false
     };
     return _this;
   }
 
   _createClass(Files, [{
+    key: "showSuccessAddFile",
+    value: function showSuccessAddFile() {
+      var $this = this;
+      $this.setState(function () {
+        return {
+          showSuccessAddMessageFile: true
+        };
+      });
+    }
+  }, {
+    key: "showErrorAddFile",
+    value: function showErrorAddFile() {
+      var $this = this;
+      $this.setState(function () {
+        return {
+          showMessageErrorAddFile: true
+        };
+      });
+    }
+  }, {
+    key: "showSuccessDeleteFile",
+    value: function showSuccessDeleteFile() {
+      var $this = this;
+      $this.setState(function () {
+        return {
+          showSuccessMessageDelete: true
+        };
+      });
+    }
+  }, {
     key: "componentWillMount",
     value: function componentWillMount() {
       var $this = this;
@@ -61202,20 +61235,31 @@ function (_Component) {
   }, {
     key: "deleteFile",
     value: function deleteFile(file) {
+      var _this2 = this;
+
       console.log(file);
-      axios.delete('api/files/' + file.id).then(function (response) {}).catch(function (error) {
+      axios.delete('api/files/' + file.id).then(function (response) {
+        _this2.showSuccessDeleteFile();
+      }).catch(function (error) {
         console.log(error);
+
+        _this2.showErrorAddFile();
       });
       var newState = this.state.data.slice();
       newState.splice(newState.indexOf(file), 1);
       this.setState({
         data: newState
       });
+      setTimeout(function () {
+        _this2.setState({
+          showSuccessMessageDelete: false
+        });
+      }, 5000);
     }
   }, {
     key: "pasteData",
     value: function pasteData(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       var url_text = e.clipboardData.getData('Text');
       console.log(url_text);
@@ -61223,31 +61267,47 @@ function (_Component) {
         url: url_text
       };
       axios.post('api/files', params).then(function (response) {
-        console.log(response.data);
+        _this3.showSuccessAddFile();
+
         axios.get('/api/files').then(function (res) {
           var files = res.data;
 
-          _this2.setState({
+          _this3.setState({
             data: files
           });
 
-          console.log(_this2.state.files);
+          console.log(_this3.state.files);
         });
       }).catch(function (error) {
-        console.log(error);
+        _this3.showErrorAddFile();
       });
+      setTimeout(function () {
+        _this3.setState({
+          showMessageErrorAddFile: false
+        });
+      }, 5000);
+      setTimeout(function () {
+        _this3.setState({
+          showSuccessAddMessageFile: false
+        });
+      }, 5000);
     }
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.showSuccessMessageDelete && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert alert-success delete message",
+        role: "alert"
+      }, "Deleted succesfully!"), this.state.showSuccessAddMessageFile && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert alert-success",
+        role: "alert"
+      }, "File added succesfully!"), this.state.showMessageErrorAddFile && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert alert-danger",
+        role: "alert"
+      }, "Somethig went wrong!"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        method: "post",
-        action: "/savefile",
-        encType: "multipart/form-data"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "url",
@@ -61256,10 +61316,7 @@ function (_Component) {
         onPaste: this.pasteData.bind(this),
         "aria-describedby": "emailHelp",
         placeholder: "Input url for download and save file"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        type: "submit",
-        className: "btn btn-info"
-      }, "Submit"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
         scope: "col"
@@ -61279,7 +61336,7 @@ function (_Component) {
         }, file.path)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
           href: "javascript:;",
           className: "btn btn-danger",
-          onClick: _this3.deleteFile.bind(_this3, file)
+          onClick: _this4.deleteFile.bind(_this4, file)
         }, "delete")));
       }))));
     }

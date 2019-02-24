@@ -5,9 +5,38 @@ export default class Files extends Component {
     constructor(){
         super();
         this.state = {
-            data: []
+            data: [],
+            showMessageErrorAddFile: false,
+            showSuccessAddMessageFile: false,
+            showSuccessMessageDelete: false,
+
         }
     }
+
+
+    showSuccessAddFile ()
+    {
+        let $this = this;
+        $this.setState(() => {
+            return { showSuccessAddMessageFile : true}
+        })
+    };
+
+    showErrorAddFile ()
+    {
+        let $this = this;
+        $this.setState(() => {
+            return { showMessageErrorAddFile : true}
+        })
+    };
+
+    showSuccessDeleteFile ()
+    {
+        let $this = this;
+        $this.setState(() => {
+            return {  showSuccessMessageDelete : true}
+        })
+    };
 
     componentWillMount(){
         let $this = this;
@@ -19,18 +48,27 @@ export default class Files extends Component {
         })
     }
 
+
     deleteFile(file){
         console.log(file);
         axios.delete('api/files/'+ file.id).then(response => {
+        this.showSuccessDeleteFile();
 
         }).catch(error => {
             console.log(error);
-        })
+            this.showErrorAddFile()
+        });
         const newState = this.state.data.slice();
         newState.splice(newState.indexOf(file), 1);
         this.setState({
             data: newState
-        })
+        });
+
+        setTimeout(() => {
+            this.setState({
+                showSuccessMessageDelete:false
+            });
+        }, 5000);
 
     }
 
@@ -39,19 +77,31 @@ export default class Files extends Component {
        console.log(url_text);
         const params = {
             url: url_text,
-        }
+        };
        axios.post('api/files', params).then(response => {
-           console.log(response.data);
+           this.showSuccessAddFile();
            axios.get('/api/files')
                .then(res => {
+
                    const files = res.data;
                    this.setState({data : files });
                    console.log(this.state.files);
                })
         }).catch(error => {
-            console.log(error);
-        })
+            this.showErrorAddFile();
+        });
 
+        setTimeout(() => {
+            this.setState({
+                showMessageErrorAddFile:false
+            });
+        }, 5000);
+
+        setTimeout(() => {
+            this.setState({
+                showSuccessAddMessageFile:false
+            });
+        }, 5000)
 
 
     }
@@ -59,11 +109,11 @@ export default class Files extends Component {
     render() {
         return (
             <div>
+                {this.state.showSuccessMessageDelete && <div className="alert alert-success delete message" role="alert">Deleted succesfully!</div>}
+                {this.state.showSuccessAddMessageFile && <div className="alert alert-success" role="alert">File added succesfully!</div>}
+                {this.state.showMessageErrorAddFile && <div className="alert alert-danger" role="alert">Somethig went wrong!</div>}
                 <div className="form-group">
-                    <form method="post" action="/savefile" encType="multipart/form-data">
-                        <input type="text" name="url" className="form-control" id="exampleInputEmail1" onPaste={this.pasteData.bind(this)} aria-describedby="emailHelp" placeholder="Input url for download and save file" />
-                        <button type="submit" className="btn btn-info" >Submit</button>
-                    </form>
+                <input type="text" name="url" className="form-control" id="exampleInputEmail1" onPaste={this.pasteData.bind(this)} aria-describedby="emailHelp" placeholder="Input url for download and save file" />
                 </div>
                 <table className="table">
                 <thead>
