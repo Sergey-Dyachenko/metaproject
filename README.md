@@ -1,4 +1,5 @@
 # metaproject
+<h3>Attention!!! For saving files you need to create folder name - "storage" in public folder of Laravel project.</h3>
 Application parse file using url and save it to local disk
 Backend API implemented on PHP Framework Laravel. Front-End - based on React.
 
